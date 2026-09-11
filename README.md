@@ -116,14 +116,6 @@ python3 training/train_classifier.py --data-dir training/data --epochs 10
 # training/checkpoints/obstacle_classifier.pt on next launch.
 ```
 
-## Project status
-
-- [x] Docker + ROS2 + Gazebo environment builds successfully
-- [ ] TurtleBot3 baseline navigation verified
-- [ ] Grad-CAM perception node verified against live camera feed
-- [ ] Training data collected and classifier fine-tuned
-- [ ] Demo video recorded
-
 ## Why this project
 
 Built as part of exploring a research pivot toward robotics, extending
