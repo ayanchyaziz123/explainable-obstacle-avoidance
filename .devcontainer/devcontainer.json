@@ -1,0 +1,18 @@
+{
+  "name": "explainable-obstacle-avoidance",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/ros2_ws",
+  "postCreateCommand": "echo 'ROS2 environment ready. Run: source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash'",
+
+  // Uncomment the feature below to get a browser-accessible lightweight
+  // desktop (VNC) for Gazebo/RViz GUIs, since Codespaces has no display
+  // by default. See: https://github.com/devcontainers/features/tree/main/src/desktop-lite
+  // "features": {
+  //   "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  // },
+
+  "remoteUser": "root"
+}

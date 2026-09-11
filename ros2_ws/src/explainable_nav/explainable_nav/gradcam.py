@@ -5,21 +5,41 @@ medical imaging work, just pointed at a robot's camera feed instead of
 colonoscopy frames.
 """
 
+import os
+
 import cv2
 import numpy as np
 import torch
+import torch.nn as nn
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
 from torchvision import models, transforms
+
+CHECKPOINT_PATH = os.environ.get(
+    "EXPLAINABLE_NAV_CHECKPOINT",
+    "/ros2_ws/training/checkpoints/obstacle_classifier.pt",
+)
 
 
 class ObstacleGradCAM:
     def __init__(self, device: str = "cpu"):
         self.device = torch.device(device)
+        self.classes = None
 
-        # Placeholder classifier: swap this for a model fine-tuned on
-        # "obstacle" vs "clear path" once you have labeled simulation data.
-        self.model = models.mobilenet_v3_small(weights="IMAGENET1K_V1")
+        if os.path.exists(CHECKPOINT_PATH):
+            checkpoint = torch.load(CHECKPOINT_PATH, map_location=self.device)
+            self.classes = checkpoint["classes"]
+            self.model = models.mobilenet_v3_small(weights=None)
+            in_features = self.model.classifier[-1].in_features
+            self.model.classifier[-1] = nn.Linear(in_features, len(self.classes))
+            self.model.load_state_dict(checkpoint["state_dict"])
+        else:
+            # Placeholder classifier: run training/train_classifier.py on
+            # collected simulation frames to get a real obstacle/clear-path
+            # model, then set EXPLAINABLE_NAV_CHECKPOINT (or drop the file
+            # at the default path above) so this branch is no longer used.
+            self.model = models.mobilenet_v3_small(weights="IMAGENET1K_V1")
+
         self.model.eval().to(self.device)
 
         target_layer = self.model.features[-1]

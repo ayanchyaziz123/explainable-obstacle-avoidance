@@ -3,12 +3,19 @@ services:
     build: .
     container_name: explainable_nav
     environment:
+      # host.docker.internal resolves to the Mac host from inside the
+      # container on Docker Desktop for Mac; XQuartz listens on :0 there.
       - DISPLAY=host.docker.internal:0
       - TURTLEBOT3_MODEL=waffle_pi
       - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_INDIRECT=1
     volumes:
       - ./ros2_ws/src:/ros2_ws/src
       - ./logs:/ros2_ws/logs
-    network_mode: host
+    # NOTE: network_mode: host is a no-op on Docker Desktop for Mac
+    # (Linux-only). ROS2 nodes across containers still need to discover
+    # each other; since everything runs in this single container for now,
+    # default bridge networking is fine. Revisit if you split into
+    # multiple containers later.
     stdin_open: true
     tty: true

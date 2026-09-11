@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'perception_node = explainable_nav.perception_node:main',
+            'data_collector_node = explainable_nav.data_collector_node:main',
         ],
     },
 )
